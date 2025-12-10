@@ -91,3 +91,21 @@ docs/notebooks/
 docs/notebook_source/*.ipynb
 docs/notebook_source/*.csv
 docs/notebook_source/artifacts/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Frontend build
+frontend/dist/
+frontend/.env
+
+# Backend artifacts
+backend/artifacts/
+backend/*.db
+*.db
+
+# DataDesigner
+DataDesigner/
