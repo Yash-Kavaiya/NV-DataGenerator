@@ -15,7 +15,7 @@ export function Header() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Contact Center Data Generator</h1>
-              <p className="text-xs text-gray-400">Powered by NVIDIA NeMo Data Designer</p>
+              <p className="text-xs text-gray-400">Powered by Data Designer</p>
             </div>
           </div>
           <nav className="flex items-center gap-4">
@@ -35,7 +35,7 @@ export function Header() {
               rel="noopener noreferrer"
               className="btn-secondary text-sm"
             >
-              NVIDIA NeMo
+              Data Designer
             </a>
           </nav>
         </div>
