@@ -14,19 +14,25 @@ from data_designer.essentials import (
     UniformSamplerParams,
     UUIDSamplerParams,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.models import GenerationConfig, Transcript
 from app.templates.industries import get_template, IndustryTemplate
 
 
+class ConversationTurn(BaseModel):
+    """A single turn in the conversation."""
+    speaker: str = Field(description="Either 'agent' or 'customer'")
+    text: str = Field(description="The spoken text")
+
+
 class ConversationOutput(BaseModel):
     """Schema for LLM-generated conversation."""
-    conversation: list[dict]
-    duration_seconds: int
-    resolution_status: str
-    csat_score: int
-    escalated: bool
+    conversation: list[ConversationTurn] = Field(description="List of conversation turns")
+    duration_seconds: int = Field(description="Estimated call duration in seconds")
+    resolution_status: str = Field(description="One of: resolved, escalated, pending, unresolved")
+    csat_score: int = Field(description="Customer satisfaction score 1-5")
+    escalated: bool = Field(description="Whether the call was escalated")
 
 
 INDUSTRY_SCENARIOS = {
@@ -278,7 +284,13 @@ Return a JSON object with:
         # Filter valid conversation turns (must have speaker and text)
         valid_conversation = []
         for turn in raw_conversation:
-            if isinstance(turn, dict) and turn.get("speaker") and turn.get("text"):
+            # Handle ConversationTurn objects or dicts
+            if hasattr(turn, "speaker") and hasattr(turn, "text"):
+                valid_conversation.append({
+                    "speaker": turn.speaker,
+                    "text": str(turn.text)
+                })
+            elif isinstance(turn, dict) and turn.get("speaker") and turn.get("text"):
                 valid_conversation.append({
                     "speaker": turn["speaker"],
                     "text": str(turn["text"])
