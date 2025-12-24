@@ -7,6 +7,15 @@ Generate realistic synthetic contact center transcripts using NVIDIA NeMo Data D
 ![React](https://img.shields.io/badge/React-18.3-61DAFB.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)
 
+## 🌐 Live Demo
+
+> **Try it now!** The application is deployed on Google Cloud Run:
+>
+> - **Frontend:** [https://nv-data-generator-frontend-c2lqvh37bq-uc.a.run.app](https://nv-data-generator-frontend-c2lqvh37bq-uc.a.run.app)
+> - **Backend API:** [https://nv-data-generator-backend-c2lqvh37bq-uc.a.run.app](https://nv-data-generator-backend-c2lqvh37bq-uc.a.run.app)
+> - **API Docs:** [https://nv-data-generator-backend-c2lqvh37bq-uc.a.run.app/docs](https://nv-data-generator-backend-c2lqvh37bq-uc.a.run.app/docs)
+
+
 ## 🎯 Overview
 
 This application provides a web-based interface for generating high-quality synthetic contact center transcripts across multiple industries. It leverages NVIDIA's NeMo Data Designer to create realistic customer-agent conversations with configurable parameters.
