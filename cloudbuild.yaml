@@ -8,6 +8,10 @@
 # Override any of the substitutions below with --substitutions on submit.
 
 substitutions:
+  # Image tag. Built-in $SHORT_SHA is only populated by Cloud Build triggers, not
+  # by `gcloud builds submit`, so we pass the commit SHA explicitly from CI and
+  # fall back to "latest" for manual local submits.
+  _TAG: latest
   _REGION: us-central1
   _AR_REPO: nv-data-generator
   _BACKEND_SERVICE: nv-data-generator-backend
@@ -60,7 +64,7 @@ steps:
       - --cache-from
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:latest
       - -t
-      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:${SHORT_SHA}
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:${_TAG}
       - -t
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:latest
       - ./backend
@@ -76,7 +80,7 @@ steps:
       - --cache-from
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:latest
       - -t
-      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:${SHORT_SHA}
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:${_TAG}
       - -t
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:latest
       - ./frontend
@@ -89,7 +93,7 @@ steps:
     args:
       - -c
       - |
-        docker push ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:${SHORT_SHA}
+        docker push ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:${_TAG}
         docker push ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:latest
     waitFor: ["build-backend"]
 
@@ -99,7 +103,7 @@ steps:
     args:
       - -c
       - |
-        docker push ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:${SHORT_SHA}
+        docker push ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:${_TAG}
         docker push ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:latest
     waitFor: ["build-frontend"]
 
@@ -112,7 +116,7 @@ steps:
       - |
         set -e
         gcloud run deploy ${_BACKEND_SERVICE} \
-          --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:${SHORT_SHA} \
+          --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/backend:${_TAG} \
           --region=${_REGION} \
           --platform=managed \
           --port=8080 \
@@ -126,7 +130,7 @@ steps:
           --min-instances=${_BACKEND_MIN_INSTANCES} \
           --max-instances=${_BACKEND_MAX_INSTANCES} \
           --no-cpu-throttling \
-          --labels=managed-by=cloud-build,commit=${SHORT_SHA}
+          --labels=managed-by=cloud-build,commit=${_TAG}
         gcloud run services describe ${_BACKEND_SERVICE} \
           --region=${_REGION} --format='value(status.url)' > /workspace/backend_url.txt
         echo "Backend deployed at: $$(cat /workspace/backend_url.txt)"
@@ -143,7 +147,7 @@ steps:
         BACKEND_URL="$$(cat /workspace/backend_url.txt)"
         echo "Wiring frontend -> backend: $$BACKEND_URL"
         gcloud run deploy ${_FRONTEND_SERVICE} \
-          --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:${SHORT_SHA} \
+          --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/frontend:${_TAG} \
           --region=${_REGION} \
           --platform=managed \
           --port=8080 \
@@ -154,7 +158,7 @@ steps:
           --concurrency=${_FRONTEND_CONCURRENCY} \
           --min-instances=${_FRONTEND_MIN_INSTANCES} \
           --max-instances=${_FRONTEND_MAX_INSTANCES} \
-          --labels=managed-by=cloud-build,commit=${SHORT_SHA}
+          --labels=managed-by=cloud-build,commit=${_TAG}
         gcloud run services describe ${_FRONTEND_SERVICE} \
           --region=${_REGION} --format='value(status.url)' > /workspace/frontend_url.txt
         echo "Frontend deployed at: $$(cat /workspace/frontend_url.txt)"
@@ -181,7 +185,7 @@ steps:
         curl -fsS -o /dev/null "$$FRONTEND_URL" && echo "Frontend reachable." || { echo "Frontend check FAILED"; exit 1; }
         echo ""
         echo "==================== Deployment summary ===================="
-        echo "  Commit:   ${SHORT_SHA}"
+        echo "  Commit:   ${_TAG}"
         echo "  Backend:  $$BACKEND_URL"
         echo "  Frontend: $$FRONTEND_URL"
         echo "==========================================================="

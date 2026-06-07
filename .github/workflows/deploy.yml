@@ -49,5 +49,5 @@ jobs:
             --project="${{ vars.GCP_PROJECT_ID }}" \
             --config=cloudbuild.yaml \
             --service-account="projects/${{ vars.GCP_PROJECT_ID }}/serviceAccounts/${{ vars.BUILD_RUNNER_SA }}" \
-            --substitutions="_REGION=${{ vars.GCP_REGION }},_AR_REPO=${{ vars.AR_REPO }},_BACKEND_SERVICE=${{ vars.BACKEND_SERVICE }},_FRONTEND_SERVICE=${{ vars.FRONTEND_SERVICE }},_RUNTIME_SA=${{ vars.RUNTIME_SA_NAME }},_NVIDIA_SECRET=${{ vars.NVIDIA_SECRET }}" \
+            --substitutions="_TAG=${{ github.sha }},_REGION=${{ vars.GCP_REGION }},_AR_REPO=${{ vars.AR_REPO }},_BACKEND_SERVICE=${{ vars.BACKEND_SERVICE }},_FRONTEND_SERVICE=${{ vars.FRONTEND_SERVICE }},_RUNTIME_SA=${{ vars.RUNTIME_SA_NAME }},_NVIDIA_SECRET=${{ vars.NVIDIA_SECRET }}" \
             .
