@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Header } from './components/Header'
+import { LandingPage } from './components/LandingPage'
 import { IndustrySelector } from './components/IndustrySelector'
 import { ScenarioSelector } from './components/ScenarioSelector'
 import { ConfigOptions } from './components/ConfigOptions'
@@ -118,7 +119,8 @@ export default function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<ConfigWizard />} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/app" element={<ConfigWizard />} />
                 <Route path="/transcripts/:jobId" element={<TranscriptViewer />} />
             </Routes>
         </BrowserRouter>
