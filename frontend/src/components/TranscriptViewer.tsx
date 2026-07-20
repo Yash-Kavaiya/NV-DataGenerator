@@ -63,7 +63,7 @@ export function TranscriptViewer() {
       {/* Top bar */}
       <header className="border-b border-gray-800 bg-gray-900/50 sticky top-0 z-10 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
-          <Link to="/" className="btn-secondary flex items-center gap-2">
+          <Link to="/app" className="btn-secondary flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
             Back
           </Link>
@@ -90,7 +90,7 @@ export function TranscriptViewer() {
           <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 text-center text-red-400">
             <AlertCircle className="w-8 h-8 mx-auto mb-2" />
             <p>{(error as Error)?.message || 'Could not load transcripts.'}</p>
-            <Link to="/" className="text-nvidia-green underline mt-3 inline-block">Return to generator</Link>
+            <Link to="/app" className="text-nvidia-green underline mt-3 inline-block">Return to generator</Link>
           </div>
         )}
 
